@@ -1,0 +1,7 @@
+tifffile
+scikit-image
+numpy
+scipy
+matplotlib
+pyprind
+jupyterlab
