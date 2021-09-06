@@ -17,6 +17,13 @@ python3 -m venv mir
 source mir/bin/activate (macOS and Linux)
 .\mir\Scripts\activate (Windows)
 ```
+
+Using conda. Can also use mamba as an alternative to conda.
+
+```sh
+conda create --name mir python=3.9
+```
+
 4. Change to source directory
 5. Install requirements. This might take several minutes to download and install all dependencies.
 ```sh
@@ -24,12 +31,19 @@ source mir/bin/activate (macOS and Linux)
 python3 -m pip install -r requirements.txt
 ```
 
+using conda,
+
+```sh
+conda install --file requirements.txt
+```
+
 6. Start JupyterLab
 ```sh
 jupyter lab
 ```
 
-If the install worked, the Jupyter server will start, the default browser will open.
+If the install worked, the Jupyter server will start and the default browser will open.
+
 7. Open the notebooks and start working with the code given.
 8. Python files that are included can be used to write custom scripts in Jupyter notebooks or in Python scripts.
 
