@@ -56,14 +56,14 @@ def calc_dei_fit(images, angles, PBar=None, Qt=None, Stop=None, Tr=0.0, Calc_res
 
     PBar   : ProgressBar object
              based on needed methods of qprogressbar
-             
+
     Qt     : PyQt5.QtWidgets.QApplication
-    
+
     Stop   : PyQt5.QtWidgets.QCheckBox
-    
+
     Tr     : Scalar (float)
              Threshold for including data point
-             
+
     Calc_res: flag (Boolean)
               Select if r-squared values should be calculated.
 
@@ -92,10 +92,10 @@ def calc_dei_fit(images, angles, PBar=None, Qt=None, Stop=None, Tr=0.0, Calc_res
 
     res_img : 2D array (float)
               r-squared image
-              
+
     area_img: 2D array (float)
               area image (Area = sqrt(2pi) × amplitude × width)
-    
+
     radio_img: 2D array (float)
                radiograph image (radio = -log(area))
 
@@ -158,7 +158,18 @@ def calc_dei_fit(images, angles, PBar=None, Qt=None, Stop=None, Tr=0.0, Calc_res
     # print(str(PBar))
     # PBar.reset()
 
-    return IR, deltaR, sigma2, a_img, b_img, c_img, abs_img, res_img, area_img, radio_img
+    return (
+        IR,
+        deltaR,
+        sigma2,
+        a_img,
+        b_img,
+        c_img,
+        abs_img,
+        res_img,
+        area_img,
+        radio_img,
+    )
 
 
 class ProgressBar:

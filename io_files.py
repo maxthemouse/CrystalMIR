@@ -59,7 +59,7 @@ def write_ini_file(path, config):
 
 
 def load_img(path_name, crop=None):
-    """ Load image from file.
+    """Load image from file.
         Option to crop the image.
 
     Parameters
@@ -132,7 +132,7 @@ def load_ave_img(root_path, names, error, crop=None):
 
 
 def save_img(path_name, im, dtype="float"):
-    """ Save image as 32 bit float tiff.
+    """Save image as 32 bit float tiff.
 
     Parameters
     ----------
@@ -169,7 +169,7 @@ def save_img(path_name, im, dtype="float"):
 
 
 def mkdir(output_dir):
-    """ make a directory if it does not already exist
+    """make a directory if it does not already exist
 
     Parameters
     ----------
@@ -185,7 +185,7 @@ def mkdir(output_dir):
 
 
 def read_rc_file(name):
-    """ Read rocking curve file.
+    """Read rocking curve file.
     Data is assumed to be in columns with tab or space.
 
     Parameters
@@ -359,7 +359,7 @@ def create_paths(param, out):
     param["result_path"] = os.path.join(param["root_dir"], param["data_dir"], "result")
     mkdir(param["result_path"])
     param["root_result_path"] = os.path.join(param["root_dir"], "result")
-    mkdir(param["root_result_path"])      
+    mkdir(param["root_result_path"])
     param["abs_path"] = os.path.join(param["root_result_path"], "Abs")
     mkdir(param["abs_path"])
     param["abs_log_path"] = os.path.join(param["root_result_path"], "Abs_log")
