@@ -370,6 +370,10 @@ def create_paths(param, out):
     mkdir(param["scatter_path"])
     param["resid_path"] = os.path.join(param["root_result_path"], "R2")
     mkdir(param["resid_path"])
+    param["area_path"] = os.path.join(param["root_result_path"], "Area")
+    mkdir(param["area_path"])
+    param["radio_path"] = os.path.join(param["root_result_path"], "Radio")
+    mkdir(param["radio_path"])
     # paths for input
     param["darks_path"] = os.path.join(param["root_dir"], param["dark_dir"], "darks")
     out.showMessage(param["darks_path"])
@@ -455,7 +459,7 @@ def save_results(param, result1, result2):
     _filter = param["image_filter"]
     m = param["filter_width"]
     if param["save_images"]:
-        for i in range(8):
+        for i in range(10):
             save_img(
                 os.path.join(param["result_path"], "flat_{:02d}.tif".format(i)),
                 _filter(result1[i], m),
@@ -489,5 +493,15 @@ def save_results(param, result1, result2):
     save_img(
         os.path.join(param["resid_path"], "R2_{}.tif".format(param["data_dir"])),
         _filter(mibeta([result2[7], result1[7]]), m),
+        dtype,
+    )
+    save_img(
+        os.path.join(param["area_path"], "area_{}.tif".format(param["data_dir"])),
+        _filter(result2[8] / result1[8], m),
+        dtype,
+    )
+    save_img(
+        os.path.join(param["radio_path"], "radio_{}.tif".format(param["data_dir"])),
+        _filter(result2[9] - result1[9], m),
         dtype,
     )

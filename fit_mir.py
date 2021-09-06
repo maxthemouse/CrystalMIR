@@ -2,7 +2,7 @@ import numpy as np
 import warnings
 import pyprind
 import os.path
-from numpy import exp, log, polyfit, linspace, savez_compressed, load
+from numpy import exp, log, polyfit, linspace, savez_compressed, load, sqrt, pi
 import scipy.ndimage
 
 np.seterr(all="ignore")  # don't print warnings
@@ -92,6 +92,12 @@ def calc_dei_fit(images, angles, PBar=None, Qt=None, Stop=None, Tr=0.0, Calc_res
 
     res_img : 2D array (float)
               r-squared image
+              
+    area_img: 2D array (float)
+              area image (Area = sqrt(2pi) × amplitude × width)
+    
+    radio_img: 2D array (float)
+               radiograph image (radio = -log(area))
 
     Print is used for output which will not show up in a Qt GUI.
     """
@@ -106,6 +112,8 @@ def calc_dei_fit(images, angles, PBar=None, Qt=None, Stop=None, Tr=0.0, Calc_res
     c_img = np.zeros(images[0].shape, dtype=np.float)
     abs_img = np.zeros(images[0].shape, dtype=np.float)
     res_img = np.zeros(images[0].shape, dtype=np.float)
+    area_img = np.zeros(images[0].shape, dtype=np.float)
+    radio_img = np.zeros(images[0].shape, dtype=np.float)
     if PBar is None:
         PBar = ProgressBar(xsize, True)
     PBar.reset()
@@ -139,6 +147,8 @@ def calc_dei_fit(images, angles, PBar=None, Qt=None, Stop=None, Tr=0.0, Calc_res
             abs_img[i, j] = (b ** 2 / (4.0 * c)) - a
             if Calc_res:
                 res_img[i, j] = r2(y, np.exp(np.poly1d(popt)(x)))
+            area_img[i, j] = IR[i, j] * sqrt(sigma2[i, j] * 2 * pi)
+            radio_img[i, j] = -log(area_img[i, j])
         PBar.setValue(i / float(xsize) * 100.0)
         if Qt is not None:
             Qt.processEvents()
@@ -148,7 +158,7 @@ def calc_dei_fit(images, angles, PBar=None, Qt=None, Stop=None, Tr=0.0, Calc_res
     # print(str(PBar))
     # PBar.reset()
 
-    return IR, deltaR, sigma2, a_img, b_img, c_img, abs_img, res_img
+    return IR, deltaR, sigma2, a_img, b_img, c_img, abs_img, res_img, area_img, radio_img
 
 
 class ProgressBar:
