@@ -5,8 +5,9 @@ import glob
 import tifffile as tf
 from skimage import exposure
 from io import open
-from numpy import min, sqrt, tanh, arctanh
+from numpy import min, sqrt, tanh, arctanh, flipud, median
 from functools import reduce
+from fit_mir import merge_images
 
 
 def add_to_config(config, section, items):
@@ -328,7 +329,7 @@ def mibeta(r2_values):
     r2_values  :  list of 2DArray (float)
                   image of r2 values
 
-    Result
+    Returns
     ------
     mibeta     :  2DArray (float)
                   image
@@ -505,3 +506,19 @@ def save_results(param, result1, result2):
         _filter(result2[9] - result1[9], m),
         dtype,
     )
+
+def stitch_images(r_path, name, ref, overlap=0, flip=False, scale=False, blend=False):
+    no_ref = [-1, -1, -1, -1]
+    images = sorted(glob.glob(os.path.join(r_path, name, "*.tif")))
+    refs = [load_img(f, ref) for f in images]
+    imgs = [load_img(f, no_ref) for f in images]
+    if scale:
+        m = [median(r) for r in refs]
+        print(name + ":" + str(m))
+        for i in range(len(imgs)):
+            imgs[i] *= m[0] / m[i]
+    if flip:
+        imgs = [flipud(im) for im in imgs]
+    # merge the images pair-wise
+    merged = reduce(lambda im1, im2: merge_images(im1, im2, overlap, blend), imgs)
+    return merged
