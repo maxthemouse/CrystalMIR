@@ -4,6 +4,7 @@ import pyprind
 import os.path
 from numpy import exp, log, polyfit, linspace, savez_compressed, load, sqrt, pi
 import scipy.ndimage
+import glob
 
 np.seterr(all="ignore")  # don't print warnings
 warnings.simplefilter("ignore", np.RankWarning)
@@ -319,3 +320,5 @@ def fit_dirs(param, out, image, flat1, flat2, Tr=0.1):
         return result4, result2
     else:
         return result1, result2
+
+    

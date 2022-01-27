@@ -507,7 +507,36 @@ def save_results(param, result1, result2):
         dtype,
     )
 
-def stitch_images(r_path, name, ref, overlap=0, flip=False, scale=False, blend=False):
+def stitch_images(r_path, name, ref, overlap=0, flip=False, scale=False, blend=True):
+    """Stich images together
+    
+    Parameters
+    ----------
+    r_path  : String (os.path)
+              Path to results folder 
+
+    name : String
+            Name of images
+            
+    ref : List of Int
+          [LEFT, RIGHT, TOP, BOTTOM] -1 for limit
+    
+    overlap : Int
+              Overlap in pixels
+    
+    Flip : Boolean
+           Flag to flip image vertically
+           
+    scale : Boolean
+            Flag to scale image using region
+    
+    blend : Boolean
+            Flag to use blending function in the overlap region
+            
+    Returns
+    -------
+    output: merged 
+    """
     no_ref = [-1, -1, -1, -1]
     images = sorted(glob.glob(os.path.join(r_path, name, "*.tif")))
     refs = [load_img(f, ref) for f in images]
