@@ -357,13 +357,9 @@ def create_paths(param, out):
     None  : Input dictionary is mutable
     """
     # create output paths
-    if param["output_dir"] == "":
-        out_path = param["root_dir"]
-    else:
-        out_path = os.path.join(param["output_dir"], param["data_dir"])
-    param["result_path"] = os.path.join(out_path, param["data_dir"], "result")
+    param["result_path"] = os.path.join(param["output_dir"], param["data_dir"], "result")
     mkdir(param["result_path"])
-    param["root_result_path"] = os.path.join(out_path, "result")
+    param["root_result_path"] = os.path.join(param["output_dir"], "result")
     mkdir(param["root_result_path"])
     param["abs_path"] = os.path.join(param["root_result_path"], "Abs")
     mkdir(param["abs_path"])
