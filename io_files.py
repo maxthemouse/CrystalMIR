@@ -1,12 +1,14 @@
-import os
-import os.path
 import codecs
 import glob
-import tifffile as tf
-from skimage import exposure
-from io import open
-from numpy import min, sqrt, tanh, arctanh, flipud, median
+import os
+import os.path
 from functools import reduce
+from io import open
+
+import tifffile as tf
+from numpy import arctanh, flipud, median, min, sqrt, tanh
+from skimage import exposure
+
 from fit_mir import merge_images
 
 
@@ -107,6 +109,9 @@ def load_ave_img(root_path, names, error, crop=None):
     names     : List (String)
                 File names
 
+    error     : Dict
+                Error messages
+
     crop      : list (int), tuple (Int), None
                 [LEFT, RIGHT, TOP, BOTTOM]
                 -1 indicates to use limit
@@ -133,7 +138,7 @@ def load_ave_img(root_path, names, error, crop=None):
 
 
 def save_img(path_name, im, dtype="float"):
-    """Save image as 32 bit float tiff.
+    """Save image as 32-bit float tiff.
 
     Parameters
     ----------
@@ -239,8 +244,8 @@ def write_rc_file(path_name, X, Y):
 
 
 class Text_Output(object):
-    """Output object to use for printing. Uses same methods as Qstatusbar
-    so it can be a substiute."""
+    """Output object to use for printing. Uses same methods as Qstatusbar,
+    so it can be a substitute."""
 
     def clearMessage(self):
         pass
@@ -263,7 +268,7 @@ def sub_dark(image, dark, mode=0):
     dark   : 2D array (float)
              image
 
-    mod    : scalar (int)
+    mode    : scalar (int)
              set mode of action
 
     Returns
@@ -271,6 +276,7 @@ def sub_dark(image, dark, mode=0):
     result  : 2D array (float)
               image
     """
+    result = image
     if mode == 2:
         return image
     if mode == 0:
@@ -284,7 +290,7 @@ def sub_dark(image, dark, mode=0):
 
 
 def mibeta(r2_values):
-    """Multiple imputation estimate. Combine R-squraed values of various
+    """Multiple imputation estimate. Combine R-squared values of various
     inputs that are combined into one model. Without going into detail,
     the MI estimate of a parameter (e.g. a regression coefficient) is
     the average of the estimated coefficients from the MI datasets. The
@@ -335,10 +341,10 @@ def mibeta(r2_values):
                   image
 
     """
-    N = len(r2_values)
+    num = len(r2_values)
     r = (sqrt(a) for a in r2_values)
     z = (arctanh(a) for a in r)
-    ave_z = reduce(lambda a, b: a + b, z) / N
+    ave_z = reduce(lambda a, b: a + b, z) / num
     ave_r = tanh(ave_z)
     return ave_r ** 2
 
@@ -357,7 +363,9 @@ def create_paths(param, out):
     None  : Input dictionary is mutable
     """
     # create output paths
-    param["result_path"] = os.path.join(param["output_dir"], param["data_dir"], "result")
+    param["result_path"] = os.path.join(
+        param["output_dir"], param["data_dir"], "result"
+    )
     mkdir(param["result_path"])
     param["root_result_path"] = os.path.join(param["output_dir"], "result")
     mkdir(param["root_result_path"])
@@ -439,7 +447,7 @@ def load_data(param, crop):
 
 
 def save_results(param, result1, result2):
-    """Save all of the results as images.
+    """Save all the results as images.
 
     Parameters
     ----------
@@ -507,8 +515,9 @@ def save_results(param, result1, result2):
         dtype,
     )
 
+
 def stitch_images(r_path, name, ref, overlap=0, flip=False, scale=False, blend=True):
-    """Stich images together
+    """Stitch images together
     
     Parameters
     ----------
@@ -524,7 +533,7 @@ def stitch_images(r_path, name, ref, overlap=0, flip=False, scale=False, blend=T
     overlap : Int
               Overlap in pixels
     
-    Flip : Boolean
+    flip : Boolean
            Flag to flip image vertically
            
     scale : Boolean

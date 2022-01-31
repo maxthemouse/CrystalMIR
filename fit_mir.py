@@ -1,10 +1,10 @@
-import numpy as np
-import warnings
-import pyprind
 import os.path
-from numpy import exp, log, polyfit, linspace, savez_compressed, load, sqrt, pi
+import warnings
+
+import numpy as np
+import pyprind
 import scipy.ndimage
-import glob
+from numpy import exp, linspace, load, log, pi, polyfit, savez_compressed, sqrt
 
 np.seterr(all="ignore")  # don't print warnings
 warnings.simplefilter("ignore", np.RankWarning)
@@ -14,7 +14,7 @@ warnings.simplefilter("ignore", np.RankWarning)
 
 mir_defaults = {
     "crop": [-1, -1, -1, -1],
-    "threshhold": 0.1,  # fitting threshold
+    "threshold": 0.1,  # fitting threshold
     "dtype": "float",  # type for saving images
     # filter for images, use no_filter if no filter is desired
     "image_filter": scipy.ndimage.median_filter,
@@ -175,7 +175,7 @@ def calc_dei_fit(images, angles, PBar=None, Qt=None, Stop=None, Tr=0.0, Calc_res
 
 class ProgressBar:
     """Progress bar object to provide common method wrapping for
-    using qa widget in a gui and pyprind elsewhere."""
+    using qt widget in a gui and pyprind elsewhere."""
 
     def __init__(self, limit, monitor):
         self.bar = pyprind.ProgBar(limit, monitor)
@@ -241,7 +241,7 @@ def merge_images(img1, img2, overlap, blend=False):
     (height1, width1) = img1.shape
     (height2, width2) = img2.shape
     # overlap region has to merged somehow
-    c1 = img1[height1 - overlap : height1, 0:width1]
+    c1 = img1[height1 - overlap:height1, 0:width1]
     c2 = img2[0:overlap, 0:width2]
     if blend:
         # linear blending
@@ -258,12 +258,12 @@ def merge_images(img1, img2, overlap, blend=False):
         # use average values
         c3 = (c1 + c2) / 2.0
     result = np.vstack(
-        (img1[0 : height1 - overlap, 0:width1], c3, img2[overlap:height2, 0:width2])
+        (img1[0:height1 - overlap, 0:width1], c3, img2[overlap:height2, 0:width2])
     )
     return result
 
 
-def fit_dirs(param, out, image, flat1, flat2, Tr=0.1):
+def fit_dirs(param, out, image, flat1, flat2, threshold=0.1):
     """Fit flats and images."""
     start = -10
     stop = 10
@@ -283,7 +283,7 @@ def fit_dirs(param, out, image, flat1, flat2, Tr=0.1):
                    Save the result.
                    default = True
 
-        Result
+        Returns
         ------
         result  : list of 2DArray (float)
                   images
@@ -293,7 +293,7 @@ def fit_dirs(param, out, image, flat1, flat2, Tr=0.1):
             out.showMessage(list(key for key in results.keys()))
             result = [results[key] for key in results.keys()]
         else:
-            result = calc_dei_fit(data, pos, Tr=Tr, Calc_res=True)
+            result = calc_dei_fit(data, pos, Tr=threshold, Calc_res=True)
             if save:
                 savez_compressed(d_path, *result)
         return result
@@ -320,5 +320,3 @@ def fit_dirs(param, out, image, flat1, flat2, Tr=0.1):
         return result4, result2
     else:
         return result1, result2
-
-    
