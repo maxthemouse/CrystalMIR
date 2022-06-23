@@ -5,6 +5,7 @@ import numpy as np
 import pyprind
 import scipy.ndimage
 from numpy import exp, linspace, load, log, pi, polyfit, savez_compressed, sqrt
+from numba import jit
 
 np.seterr(all="ignore")  # don't print warnings
 warnings.simplefilter("ignore", np.RankWarning)
@@ -192,7 +193,7 @@ class ProgressBar:
     def show(self):
         pass
 
-
+@jit
 def r2(data1, data2):
     """Return the r-squared difference between data1 and data2.
 
