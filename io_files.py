@@ -98,6 +98,43 @@ def load_img(path_name, crop=None):
     return im
 
 
+def load_img_bt(path_name, crop=None):
+    """Load images from bigtiff file.
+        Option to crop the image.
+
+    Parameters
+    ----------
+    path_name : String (os.path)
+                Full path to file.
+
+    crop      : list or tuple or None
+                [LEFT, RIGHT, TOP, BOTTOM]
+                -1 indicates to use limit
+                if None no cropping is done
+
+    Returns
+    -------
+    output : 3D array (float32)
+             images
+    """
+    # im = tf.imread(os.path.join(root_dir,name + ".tif")).astype('float32')
+    im = tf.imread(path_name).astype("float32")
+    num, height, width = im.shape
+    if crop is None:
+        return im
+    l, r, t, b = crop
+    if l < 0:
+        l = 0
+    if r < 0:
+        r = width
+    if t < 0:
+        t = 0
+    if b < 0:
+        b = height
+    im = im[:, t:b, l:r]
+    return im
+
+
 def load_ave_img(root_path, names, error, crop=None):
     """Load files from a list and return the average.
 
@@ -131,7 +168,46 @@ def load_ave_img(root_path, names, error, crop=None):
         else:
             result += im
     if result is None:
-        error["Dark file error"] = "Can't open dark files. Check name."
+        error["Ave file error"] = "Can't open files. Check name."
+    else:
+        result /= float(num)
+    return result, error
+
+
+def load_ave_img_bt(root_path, name, error, crop=None):
+    """Load files from a bigtiff file and return the average.
+
+    Parameters
+    ----------
+    root_path : String (os.path)
+                Full path to folder.
+
+    name     : List (String)
+                File names
+
+    error     : Dict
+                Error messages
+
+    crop      : list (int), tuple (Int), None
+                [LEFT, RIGHT, TOP, BOTTOM]
+                -1 indicates to use limit
+                if None no cropping is done
+
+    Returns
+    -------
+    output : 2D array (float32)
+             image
+    """
+    result = None
+    im = load_img_bt(os.path.join(root_path, name), crop)
+    num = len(im)
+    for i in range(num):
+        if result is None:
+            result = im[i]
+        else:
+            result += im[i]
+    if result is None:
+        error["Ave file error"] = "Can't open file. Check name."
     else:
         result /= float(num)
     return result, error
@@ -444,6 +520,59 @@ def load_data(param, crop):
     else:
         flat2_image = []
     return image, flat_image, flat2_image
+
+
+def load_data_bt(param, crop):
+    """Load dark, flat and image files. May return empty list.
+
+    Parameters
+    ----------
+    param  : Dictionary
+             Program parameters
+
+    crop   : scalars (list of int)
+
+    Returns
+    ------
+    image       : list of 2D array (float)
+                  image
+
+    flat_image  : list of 2D array (float)
+                  image
+
+    flat2_image : list 2D array (float)
+                  image
+
+    """
+    # create dark image
+    darks = sorted(glob.glob(os.path.join(param["darks_path"], "*.tif")))
+    d_names = [os.path.basename(n) for n in darks]
+    dark_image, err = load_ave_img_bt(param["darks_path"], d_names[0], {}, crop)
+    # create flat images
+    mode = 1
+    flats = sorted(glob.glob(os.path.join(param["flat_path"], "*.tif")))
+    flats_im = split_images(load_img_bt(flats[0], crop))
+    flat_image = [sub_dark(f, dark_image, mode) for f in flats_im]
+    # create images
+    images = sorted(glob.glob(os.path.join(param["image_path"], "*.tif")))
+    images_im = split_images(load_img_bt(images[0], crop))
+    image = [sub_dark(f, dark_image, mode) for f in images_im]
+    # create flat2 images
+    if param["flat2"]:
+        flats2 = sorted(glob.glob(os.path.join(param["flat2_path"], "*.tif")))
+        flats2_im = split_images(load_img_bt(flats2[0], crop))
+        flat2_image = [sub_dark(f, dark_image, mode) for f in flats2_im]
+    else:
+        flat2_image = []
+    return image, flat_image, flat2_image
+
+
+def split_images(image):
+    num = image.shape[0]
+    result = []
+    for i in range(num):
+        result.append(image[i])
+    return result
 
 
 def save_results(param, result1, result2):

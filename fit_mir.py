@@ -4,8 +4,8 @@ import warnings
 import numpy as np
 import pyprind
 import scipy.ndimage
-from numpy import exp, linspace, load, log, pi, polyfit, savez_compressed, sqrt
 from numba import jit
+from numpy import exp, linspace, load, log, pi, polyfit, savez_compressed, sqrt
 
 np.seterr(all="ignore")  # don't print warnings
 warnings.simplefilter("ignore", np.RankWarning)
@@ -193,6 +193,7 @@ class ProgressBar:
     def show(self):
         pass
 
+
 @jit
 def r2(data1, data2):
     """Return the r-squared difference between data1 and data2.
@@ -242,7 +243,7 @@ def merge_images(img1, img2, overlap, blend=False):
     (height1, width1) = img1.shape
     (height2, width2) = img2.shape
     # overlap region has to merged somehow
-    c1 = img1[height1 - overlap:height1, 0:width1]
+    c1 = img1[height1 - overlap : height1, 0:width1]
     c2 = img2[0:overlap, 0:width2]
     if blend:
         # linear blending
@@ -259,7 +260,7 @@ def merge_images(img1, img2, overlap, blend=False):
         # use average values
         c3 = (c1 + c2) / 2.0
     result = np.vstack(
-        (img1[0:height1 - overlap, 0:width1], c3, img2[overlap:height2, 0:width2])
+        (img1[0 : height1 - overlap, 0:width1], c3, img2[overlap:height2, 0:width2])
     )
     return result
 
