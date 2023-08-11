@@ -267,8 +267,8 @@ def merge_images(img1, img2, overlap, blend=False):
 
 def fit_dirs(param, out, image, flat1, flat2, threshold=0.1):
     """Fit flats and images."""
-    start = -10
-    stop = 10
+    xaxis = param.get("xaxis", (-10, 10))
+    start, stop = xaxis
     pos = linspace(start, stop, len(image))
     param["x-axis"] = pos
 
