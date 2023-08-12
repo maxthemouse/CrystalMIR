@@ -140,13 +140,13 @@ def calc_dei_fit(images, angles, PBar=None, Qt=None, Stop=None, Tr=0.0, Calc_res
             # polynomial fit
             popt = polyfit(x1, log(y1), 2, w=y1 * y1)
             c, b, a = popt
-            IR[i, j] = exp(a - (b ** 2 / (4.0 * c)))
+            IR[i, j] = exp(a - (b**2 / (4.0 * c)))
             deltaR[i, j] = -b / (2.0 * c)
             sigma2[i, j] = -1.0 / (2.0 * c)
             a_img[i, j] = a
             b_img[i, j] = b
             c_img[i, j] = c
-            abs_img[i, j] = (b ** 2 / (4.0 * c)) - a
+            abs_img[i, j] = (b**2 / (4.0 * c)) - a
             if Calc_res:
                 res_img[i, j] = r2(y, np.exp(np.poly1d(popt)(x)))
             area_img[i, j] = IR[i, j] * sqrt(sigma2[i, j] * 2 * pi)

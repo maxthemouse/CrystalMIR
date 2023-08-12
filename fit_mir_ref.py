@@ -2,15 +2,17 @@
 This was an experimental attempt to use a reference area to adjust
 parameters between views. This actually caused greater banding.
 The method used or having params in the calculation might be useful.
-
-Note, this code was copied from a version of fit_mir so is probably missing 
-imports and functions from that file.
 """
 
-
-from numpy import median
+import os
 from collections import namedtuple
-Adjustment = namedtuple('Adjustment', 'A B C')
+
+import numpy as np
+from numpy import exp, linspace, load, log, median, pi, polyfit, savez_compressed, sqrt
+
+from fit_mir import ProgressBar, r2
+
+Adjustment = namedtuple("Adjustment", "A B C")
 
 
 def fit_dirs_ref(param, out, image, flat1, flat2, threshold=0.1):
@@ -19,7 +21,7 @@ def fit_dirs_ref(param, out, image, flat1, flat2, threshold=0.1):
     stop = 10
     pos = linspace(start, stop, len(image))
     param["x-axis"] = pos
-    zero = Adjustment(0,0,0)
+    zero = Adjustment(0, 0, 0)
     if param["set_ref"]:
         param["adjustment"] = zero
         param["apply_adj"] = True
@@ -56,16 +58,14 @@ def fit_dirs_ref(param, out, image, flat1, flat2, threshold=0.1):
 
     # fit flat1
     result1 = run_calc(
-        os.path.join(param["root_result_path"], "flat_fit.npz"),
-        flat1,
-        param
+        os.path.join(param["root_result_path"], "flat_fit.npz"), flat1, param
     )
     # fit image
     result2 = run_calc(
         os.path.join(
             param["root_result_path"], "image_fit_{}.npz".format(param["data_dir"])
         ),
-        image, 
+        image,
         param,
         param["save_result_npz"],
     )
@@ -73,9 +73,7 @@ def fit_dirs_ref(param, out, image, flat1, flat2, threshold=0.1):
     result3 = []
     if param["flat2"]:
         result3 = run_calc(
-            os.path.join(param["root_result_path"], "flat2_fit.npz"), 
-            flat2,
-            param
+            os.path.join(param["root_result_path"], "flat2_fit.npz"), flat2, param
         )
     # combine results1 and results3
     if param["flat2"]:
@@ -84,8 +82,10 @@ def fit_dirs_ref(param, out, image, flat1, flat2, threshold=0.1):
     else:
         return result1, result2
 
-    
-def calc_dei_fit_ref(images, angles, param, PBar=None, Qt=None, Stop=None, Tr=0.0, Calc_res=False):
+
+def calc_dei_fit_ref(
+    images, angles, param, PBar=None, Qt=None, Stop=None, Tr=0.0, Calc_res=False
+):
     """Calculate the images based on all inputs.
 
     Parameters
@@ -159,7 +159,7 @@ def calc_dei_fit_ref(images, angles, param, PBar=None, Qt=None, Stop=None, Tr=0.
     if PBar is None:
         PBar = ProgressBar(xsize, True)
     PBar.reset()
-    two_pi = 2*pi
+    two_pi = 2 * pi
     for i in range(xsize):
         if Stop is not None:  # Stop signal in Qt interface
             if Stop.isChecked():
@@ -181,7 +181,7 @@ def calc_dei_fit_ref(images, angles, param, PBar=None, Qt=None, Stop=None, Tr=0.
             # polynomial fit
             popt = polyfit(x1, log(y1), 2, w=y1 * y1)
             c, b, a = popt
-            b_c_term = b ** 2 / (4.0 * c)
+            b_c_term = b**2 / (4.0 * c)
             IR[i, j] = exp(a - b_c_term)
             deltaR[i, j] = -b / (2.0 * c)
             sigma2[i, j] = -1.0 / (2.0 * c)
@@ -202,7 +202,7 @@ def calc_dei_fit_ref(images, angles, param, PBar=None, Qt=None, Stop=None, Tr=0.
     # work on reference
     img_list = [a_img, b_img, c_img]
     if param["set_ref"]:
-        result = [0,0,0]
+        result = [0, 0, 0]
         for index, img in enumerate(img_list):
             ref_img = extract_ref(param, img)
             value = extract_adjustment(ref_img)
@@ -224,7 +224,7 @@ def calc_dei_fit_ref(images, angles, param, PBar=None, Qt=None, Stop=None, Tr=0.
                 a = a_img[i, j] * delta_a
                 b = b_img[i, j] + delta_b
                 # c = c_img[i,j] + delta_c
-                b_c_term = b ** 2 / (4.0 * c)
+                b_c_term = b**2 / (4.0 * c)
                 IR[i, j] = exp(a - b_c_term)
                 deltaR[i, j] = -b / (2.0 * c)
                 sigma2[i, j] = -1.0 / (2.0 * c)
@@ -258,7 +258,7 @@ def extract_ref(param, im):
     Extract the reference from the image.
     """
     height, width = im.shape
-    crop = param.get('ref')
+    crop = param.get("ref")
     if crop is None:
         return im
     l, r, t, b = crop

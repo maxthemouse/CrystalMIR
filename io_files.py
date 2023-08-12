@@ -2,6 +2,7 @@ import codecs
 import glob
 import os
 import os.path
+import re
 from functools import reduce
 from io import open
 
@@ -422,7 +423,7 @@ def mibeta(r2_values):
     z = (arctanh(a) for a in r)
     ave_z = reduce(lambda a, b: a + b, z) / num
     ave_r = tanh(ave_z)
-    return ave_r ** 2
+    return ave_r**2
 
 
 def create_paths(param, out):
@@ -647,33 +648,33 @@ def save_results(param, result1, result2):
 
 def stitch_images(r_path, name, ref, overlap=0, flip=False, scale=False, blend=True):
     """Stitch images together
-    
+
     Parameters
     ----------
     r_path  : String (os.path)
-              Path to results folder 
+              Path to results folder
 
     name : String
             Name of images
-            
+
     ref : List of Int
           [LEFT, RIGHT, TOP, BOTTOM] -1 for limit
-    
+
     overlap : Int
               Overlap in pixels
-    
+
     flip : Boolean
            Flag to flip image vertically
-           
+
     scale : Boolean
             Flag to scale image using region
-    
+
     blend : Boolean
             Flag to use blending function in the overlap region
-            
+
     Returns
     -------
-    output: merged 
+    output: merged
     """
     no_ref = [-1, -1, -1, -1]
     images = sorted(glob.glob(os.path.join(r_path, name, "*.tif")))
@@ -690,10 +691,11 @@ def stitch_images(r_path, name, ref, overlap=0, flip=False, scale=False, blend=T
     merged = reduce(lambda im1, im2: merge_images(im1, im2, overlap, blend), imgs)
     return merged
 
+
 def extract_number(filename):
     # Use regular expression to extract the numerical part of the filename
     basename = os.path.basename(filename)
-    match = re.search(r'\d+', basename)
+    match = re.search(r"\d+", basename)
     return int(match.group()) if match else -1
 
 
