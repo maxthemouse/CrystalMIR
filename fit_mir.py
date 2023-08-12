@@ -106,16 +106,16 @@ def calc_dei_fit(images, angles, PBar=None, Qt=None, Stop=None, Tr=0.0, Calc_res
 
     x = np.array(angles)
     xsize, ysize = images[0].shape
-    IR = np.zeros(images[0].shape, dtype=np.float)
-    deltaR = np.zeros(images[0].shape, dtype=np.float)
-    sigma2 = np.zeros(images[0].shape, dtype=np.float)
-    a_img = np.zeros(images[0].shape, dtype=np.float)
-    b_img = np.zeros(images[0].shape, dtype=np.float)
-    c_img = np.zeros(images[0].shape, dtype=np.float)
-    abs_img = np.zeros(images[0].shape, dtype=np.float)
-    res_img = np.zeros(images[0].shape, dtype=np.float)
-    area_img = np.zeros(images[0].shape, dtype=np.float)
-    radio_img = np.zeros(images[0].shape, dtype=np.float)
+    IR = np.zeros(images[0].shape, dtype=float)
+    deltaR = np.zeros(images[0].shape, dtype=float)
+    sigma2 = np.zeros(images[0].shape, dtype=float)
+    a_img = np.zeros(images[0].shape, dtype=float)
+    b_img = np.zeros(images[0].shape, dtype=float)
+    c_img = np.zeros(images[0].shape, dtype=float)
+    abs_img = np.zeros(images[0].shape, dtype=float)
+    res_img = np.zeros(images[0].shape, dtype=float)
+    area_img = np.zeros(images[0].shape, dtype=float)
+    radio_img = np.zeros(images[0].shape, dtype=float)
     if PBar is None:
         PBar = ProgressBar(xsize, True)
     PBar.reset()
@@ -194,7 +194,7 @@ class ProgressBar:
         pass
 
 
-@jit
+@jit(nopython=True)
 def r2(data1, data2):
     """Return the r-squared difference between data1 and data2.
 
