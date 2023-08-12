@@ -689,3 +689,15 @@ def stitch_images(r_path, name, ref, overlap=0, flip=False, scale=False, blend=T
     # merge the images pair-wise
     merged = reduce(lambda im1, im2: merge_images(im1, im2, overlap, blend), imgs)
     return merged
+
+def extract_number(filename):
+    # Use regular expression to extract the numerical part of the filename
+    basename = os.path.basename(filename)
+    match = re.search(r'\d+', basename)
+    return int(match.group()) if match else -1
+
+
+def sort_file_names(file_names):
+    # Sort the file names based on the numerical part using the 'extract_number' function
+    sorted_names = sorted(file_names, key=extract_number)
+    return sorted_names
