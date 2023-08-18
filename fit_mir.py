@@ -10,21 +10,6 @@ from numpy import exp, linspace, load, log, pi, polyfit, savez_compressed, sqrt
 np.seterr(all="ignore")  # don't print warnings
 warnings.simplefilter("ignore", np.RankWarning)
 
-# set some program defaults
-
-
-mir_defaults = {
-    "crop": [-1, -1, -1, -1],
-    "threshold": 0.1,  # fitting threshold
-    "dtype": "float",  # type for saving images
-    # filter for images, use no_filter if no filter is desired
-    "image_filter": scipy.ndimage.median_filter,
-    "filter_width": 3,  # filter width
-    "Calc_res": True,  # flag to calculate r-squared, output zeros if false
-    "save_images": False,  # save the results as images with each data set
-    "save_result_npz": True,  # save the fit results into a npz file
-}
-
 
 def no_filter(img, m, *args):
     """filter that does nothing
