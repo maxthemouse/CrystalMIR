@@ -1,3 +1,30 @@
-[tool.isort]
-profile = "black"
-multi_line_output = 3
+[tool.poetry]
+name = "crystalMIR"
+version = "0.2.0"
+description = "Analyze data using analyzer crystal."
+authors = ["Adam Webb <Adam.webb@lightsource.ca>"]
+license = "BSD-3-Clause"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+tifffile = "^2024.8.10"
+scikit-image = "^0.24.0"
+numpy = "^2.0.1"
+scipy = "^1.14.0"
+matplotlib = "^3.9.2"
+pyprind = "^2.11.3"
+nodejs = "^0.1.1"
+jupyterlab = "^4.2.4"
+jupyterlab-widgets = "^3.0.11"
+ipywidgets = "^8.1.3"
+numba = "^0.60.0"
+xrt = "^1.6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+

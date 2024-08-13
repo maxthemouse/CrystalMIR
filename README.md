@@ -1,50 +1,25 @@
-# MultipleImageRadiography
-Analysis of data for Multiple Image Radiography
+# CrtystalMIR
+Analysis of data for Multiple Image Radiography or Analyzer Based Images and data 
+using an analyzer crystal.
 
 This project consists of files related to diffraction enhanced imaging. They are
-developed at BMIT at the Canadian Light Source [link](http://www.lightsource.ca/).
+developed at BMIT at the Canadian Light Source [link](http://www.lightsource.ca/). The previous name was 
+MultipleImageRadiography. 
 
 ## Install
 
-All files are simply installed into one folder. Jupyter notebooks are given for several modes of operation. 
+All files are simply installed into one folder and does not need to be installed as a package. 
+Jupyter notebooks are given for several modes of operation and include some instructions. 
 
-1. Install virtual environment for python 3
+1. Need python 3 and poetry
 2. Clone this repository
-3. Create a virtual environment and activate it
-
+3. cd to repo and use command
 ```sh
-python3 -m venv mir
-source mir/bin/activate (macOS and Linux)
-.\mir\Scripts\activate (Windows)
+poetry install
 ```
+ Poetry will create a virtual environment and install all dependencies. The included poetry.lock file will set the versions. 
 
-Using conda. Can also use mamba as an alternative to conda.
-
+4. To start notebooks
 ```sh
-conda create --name mir python=3.9
+poetry run jupyter lab
 ```
-
-4. Change to source directory
-5. Install requirements. This might take several minutes to download and install all dependencies.
-```sh
-# Install python requirements
-python3 -m pip install -r requirements.txt
-```
-
-using conda,
-
-```sh
-conda install --file requirements.txt
-```
-
-6. Start JupyterLab
-```sh
-jupyter lab
-```
-
-If the install worked, the Jupyter server will start and the default browser will open.
-
-7. Open the notebooks and start working with the code given.
-8. Python files that are included can be used to write custom scripts in Jupyter notebooks or in Python scripts.
-
-
