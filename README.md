@@ -1,4 +1,4 @@
-# CrtystalMIR
+# CrystalMIR
 Analysis of data for Multiple Image Radiography or Analyzer Based Images and data 
 using an analyzer crystal.
 
