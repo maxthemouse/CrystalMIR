@@ -19,6 +19,13 @@ poetry install
 ```
  Poetry will create a virtual environment and install all dependencies. The included poetry.lock file will set the versions. 
 
+ Initial setting. To avoid having some settings in the files the scripts are using dotenv. This requires an intial environment file, .env.
+ Create a .env file with the following content where S_folder is the folder where the settings folder will be. Change this value as needed. A default may be the folder where the program is installed. A good value is the location of the data or the results.
+ ```
+S_NAME='settings.json'
+S_FOLDER='E:\WPy64-31241\notebooks\CrystalMIR'
+```
+
 4. To start notebooks
 ```sh
 poetry run jupyter lab
