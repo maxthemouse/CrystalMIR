@@ -3119,4 +3119,4 @@ sphinxcontrib-jquery = "*"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "528c8e8b21cb49f4f1c8aee6197acf889872078760fa26158bce2ae6fbf77ff0"
+content-hash = "66063d5bde0188726e873fa32b4e4d43a96515e054d240a3ebd22675e7d10684"
