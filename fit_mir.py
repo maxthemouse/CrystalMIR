@@ -8,7 +8,7 @@ from numba import jit
 from numpy import exp, linspace, load, log, pi, polyfit, savez_compressed, sqrt
 
 np.seterr(all="ignore")  # don't print warnings
-warnings.simplefilter("ignore", np.RankWarning)
+warnings.simplefilter("ignore", np.exceptions.RankWarning)
 
 
 def no_filter(img, m, *args):
