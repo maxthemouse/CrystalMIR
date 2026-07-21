@@ -461,22 +461,22 @@ def create_paths(param, out):
     param["radio_path"] = os.path.join(param["root_result_path"], "Radio")
     mkdir(param["radio_path"])
     # paths for input
-    param["darks_path"] = os.path.join(param["root_dir"], param["dark_dir"], "darks")
+    param["darks_path"] = os.path.join(param["root_dir"], param["dark_dir"], param.get("dark_name", "darks"))
     out.showMessage(param["darks_path"])
     out.showMessage(os.path.isdir(param["darks_path"]))
-    param["flat_path"] = os.path.join(param["root_dir"], param["flat_dir"], "flat")
+    param["flat_path"] = os.path.join(param["root_dir"], param["flat_dir"], param.get("flat_name", "flat"))
     out.showMessage(param["flat_path"])
     out.showMessage(os.path.isdir(param["flat_path"]))
     if param["flat2_dir"]:
         param["flat2"] = True
         param["flat2_path"] = os.path.join(
-            param["root_dir"], param["flat2_dir"], "flat"
+            param["root_dir"], param["flat2_dir"], param.get("flat2_name","flat")
         )
         out.showMessage(param["flat2_path"])
         out.showMessage(os.path.isdir(param["flat2_path"]))
     else:
         param["flat2"] = False
-    param["image_path"] = os.path.join(param["root_dir"], param["data_dir"], "image")
+    param["image_path"] = os.path.join(param["root_dir"], param["data_dir"], param.get("data_name", "image"))
     out.showMessage(param["image_path"])
     out.showMessage(os.path.isdir(param["image_path"]))
 
